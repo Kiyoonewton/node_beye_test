@@ -7,9 +7,10 @@ Get http://localhost:3000/
 
 ####
 
-POST http://localhost:3000/login
+POST http://localhost:3001/register
 Content-Type: application/json
 
 {
-    "username": "Kiyoonewton"
+    "username": "Kiyoonewton4",
+    "password": "olaoluwa"
 }
