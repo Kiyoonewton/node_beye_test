@@ -1,33 +1,12 @@
 const express = require("express");
-// const { Users } = require("./models");
-const { createItem, readItems, updateItem, deleteItem } = require("./crud");
-const bcrypt = require("bcrypt");
 const app = express();
-const { v4 } = require("uuid");
+const registerController = require("./controller/register.controller");
 
 app.use(express.json());
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
-
-  const usernameExist = await readItems((err, data) => {
-    if (err) {
-      res.status(500).send(err.message);
-    }
-    return data.filter((user) => user.username === username);
-  });
-
-  bcrypt.hash(password, 10).then((hash) => {
-    !usernameExist
-      ? createItem(username, hash, v4(), (err, data) => {
-          if (err) {
-            res.status(500).send(err.message);
-          } else {
-            res.status(201).send({ data });
-          }
-        })
-      : res.status(500).send("Username Already Exist");
-  });
+  await registerController(username, password, res);
 });
 
 app.post("/login", (req, res) => {
