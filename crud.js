@@ -1,30 +1,32 @@
 const db = require("./database");
 
-const createItem = (username, password, callback) => {
-  const sql = `INSERT INTO items (username, password) VALUES (?,?)`;
-  db.run(sql, [username, password], function (err) {
+const createItem = (username, password, uuid, callback) => {
+  const sql = `INSERT INTO items (username, password, uuid) VALUES (?,?,?)`;
+  db.run(sql, [username, password, uuid], function (err) {
     if (err) {
       callback(err, null);
     } else {
-      callback(null, { id: this.lastID });
+      callback(null, { id: this.lastID, uuid });
     }
   });
 };
 
-const readItems = (callback) => {
+const readItems = async() => {
   const sql = `SELECT * FROM items`;
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      callback(err, null); // Pass the error to the callback
-    } else {
-      callback(null, rows); // Pass the rows to the callback
-    }
+  return new Promise((resolve, reject) => {
+    db.all(sql, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
   });
 };
 
-const updateItem = (id, username, password) => {
+const updateItem = (id, username, password, uuid) => {
   const sql = `UPDATE items SET username = ?, password = ? WHERE id = ?`;
-  db.run(sql, [username, password, id], callback);
+  db.run(sql, [username, password, id, uuid], callback);
 };
 
 const deleteItem = (id, callback) => {

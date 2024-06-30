@@ -3,30 +3,30 @@ const express = require("express");
 const { createItem, readItems, updateItem, deleteItem } = require("./crud");
 const bcrypt = require("bcrypt");
 const app = express();
+const { v4 } = require("uuid");
 
 app.use(express.json());
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const { username, password } = req.body;
 
-  const usernameExist = readItems((err, data) => {
+  const usernameExist = await readItems((err, data) => {
     if (err) {
       res.status(500).send(err.message);
     }
-    console.log(data[0]);
-    return data
+    return data.filter((user) => user.username === username);
   });
 
-  console.log(usernameExist);
-
   bcrypt.hash(password, 10).then((hash) => {
-    createItem(username, hash, (err, data) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.status(201).send(`Item is added ID: ${data.id}`);
-      }
-    });
+    !usernameExist
+      ? createItem(username, hash, v4(), (err, data) => {
+          if (err) {
+            res.status(500).send(err.message);
+          } else {
+            res.status(201).send({ data });
+          }
+        })
+      : res.status(500).send("Username Already Exist");
   });
 });
 
