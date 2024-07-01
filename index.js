@@ -10,6 +10,8 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
   res.json("login");
 });
 
@@ -21,8 +23,6 @@ app.get("/blog", (req, res) => {
   res.json("profile");
 });
 
-// db.sequelize.sync().then(() => {
 app.listen(3001, () => {
   console.log("SERVER RUNNING ON PORT 3001");
 });
-// });
