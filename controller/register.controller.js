@@ -1,13 +1,10 @@
-const { createUsers, readUsers } = require("../crud/users");
+const { createUsers } = require("../crud/users");
 const { v4 } = require("uuid");
 const bcrypt = require("bcrypt");
-const User = require('../models/Users');
-const db = require("../database");
 
-const registerController = async (username, password, res) => {
-  const username_from_db = await new User(db).getAllItems()
+const registerController = async (username, password, User, res) => {
 
-  const usernameExist = username_from_db.filter((user) => {
+  const usernameExist = User.filter((user) => {
     return user.username === username;
   })[0];
 
