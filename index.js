@@ -4,8 +4,7 @@ const registerController = require("./controller/register.controller");
 const db = require("./database");
 const User = require("./models/Users");
 const allUser = new User(db).getAllItems();
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const loginController = require("./controller/login.controller");
 
 app.use(express.json());
 
@@ -15,10 +14,10 @@ app.post("/register", async (req, res) => {
   await registerController(username, password, User, res);
 });
 
-app.post("/login", async(req, res) => {
+app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const User = await allUser;
-
+  await loginController(username, password, User, res);
 });
 
 app.post("/createPost", (req, res) => {

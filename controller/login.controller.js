@@ -1,3 +1,6 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const loginController = async (username, password, User, res) => {
   const usernameExist = User.filter((user) => user.username === username)[0];
 
